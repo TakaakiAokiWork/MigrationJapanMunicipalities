@@ -11,18 +11,6 @@ statDataID2014 = 0003146921
 statDataID2013 = 0003149520
 statDataID2012 = 0003150300
 
-#overlook:
-#	mkdir -p tmp
-#	Rscript scripts/overlook-data.R $(data)/2021-migrate.csv
-#	Rscript scripts/overlook-data.R $(data)/2020-migrate.csv
-#	Rscript scripts/overlook-data.R $(data)/2019-migrate.csv
-#	Rscript scripts/overlook-data.R $(data)/2018-migrate.csv
-#	Rscript scripts/overlook-data.R $(data)/2017-migrate.csv
-#	Rscript scripts/overlook-data.R $(data)/2016-migrate.csv
-#	Rscript scripts/overlook-data.R $(data)/2015-migrate.csv
-#	Rscript scripts/overlook-data.R $(data)/2014-migrate.csv
-#	Rscript scripts/overlook-data.R $(data)/2013-migrate.csv
-#	Rscript scripts/overlook-data.R $(data)/2012-migrate.csv
 
 define tidy_data
 	python scripts/check_metainfo.py tmp-dl/$(1).meta 
@@ -30,11 +18,24 @@ define tidy_data
 	python scripts/replace_code_by_text.py tmp-dl/$(1).meta tmp-dl/$(1).csv > tmp-dl/$(1)-uncode.csv
 	Rscript scripts/rename.R tmp-dl/$(1)-uncode.csv tmp-dl/$(1)-renamed.csv
 	Rscript scripts/filter-between-municipalities.R tmp-dl/$(1)-renamed.csv tmp-dl/$(1).municipacity.csv tmp-dl/$(1)-filtered.csv
+	Rscript scripts/overlook-data.R tmp-dl/$(1)-filtered.csv tmp-df/figs-$(1)
 	cp tmp-dl/$(1)-filtered.csv $(data)/$(1)-migrate.csv
 endef
 
 
-tidy_data_all: tidy2017 tidy2018 tidy2019 tidy2020 tidy2021
+get_all:
+	make get2021
+	make get2020
+	make get2019
+	make get2018
+	make get2017
+	make get2016
+	make get2015
+	make get2014
+	make get2013
+	make get2012
+
+tidy_all: tidy2012 tidy2013 tidy2014 tidy2015 tidy2016 tidy2017 tidy2018 tidy2019 tidy2020 tidy2021
 
 setup:
 	mkdir -p data
