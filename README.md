@@ -11,6 +11,9 @@ Obtain Migration flow between Japanse  municipalities
 
 2. run scripts to obtain data 
 ```
-$make all
+$make get2021 # download migration data in 2021 from e-etat.go.jp
+$make tidy2021 # tidy downloaded migration data and save it in data/2021-migrate.csv
 ```
 see `Makefile` for details.
+
+During the tidy process, some `R` packages are needed, such as `tidyverse`, `ggplot2`, `ggsci`, `scales`.
