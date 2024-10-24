@@ -1,3 +1,6 @@
+data
+tmp-dl/
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
