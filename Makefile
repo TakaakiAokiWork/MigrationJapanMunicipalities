@@ -18,13 +18,14 @@ define tidy_data
 	python scripts/replace_code_by_text.py tmp-dl/$(1).meta tmp-dl/$(1).csv > tmp-dl/$(1)-uncode.csv
 	Rscript scripts/rename.R tmp-dl/$(1)-uncode.csv tmp-dl/$(1)-renamed.csv
 	Rscript scripts/filter-between-municipalities.R tmp-dl/$(1)-renamed.csv tmp-dl/$(1).municipacity.csv tmp-dl/$(1)-filtered.csv
-	Rscript scripts/overlook-data.R tmp-dl/$(1)-filtered.csv tmp-df/figs-$(1)
-	cp tmp-dl/$(1)-filtered.csv $(data)/$(1)-migrate.csv
+	Rscript scripts/overlook-data.R tmp-dl/$(1)-filtered.csv tmp-dl/figs-$(1)
+	cp tmp-dl/$(1)-filtered.csv data/$(1)-migrate.csv
 endef
 
-
+all:
+	make get_all 2>&1 | tee get.log 
 get_all:
-	make get2021
+	make get2021 
 	make get2020
 	make get2019
 	make get2018
@@ -34,6 +35,7 @@ get_all:
 	make get2014
 	make get2013
 	make get2012
+
 
 tidy_all: tidy2012 tidy2013 tidy2014 tidy2015 tidy2016 tidy2017 tidy2018 tidy2019 tidy2020 tidy2021
 
@@ -72,7 +74,7 @@ tidy2017:
 	$(call tidy_data,2017)
 
 get2016:
-	mkdir -p tmp-dl/
+	python scripts/get_metainfo.py $(statDataID2016) > tmp-dl/2016.meta
 	python scripts/get_data.py $(statDataID2016) > tmp-dl/2016.csv
 tidy2016:
 	$(call tidy_data,2016)
