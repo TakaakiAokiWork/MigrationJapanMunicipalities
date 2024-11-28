@@ -1,5 +1,7 @@
 
 #  Stat IDs of migration in e-stat.go.jp
+statDataID2023 = 0004014380
+statDataID2022 = 0004003460
 statDataID2021 = 0003448458
 statDataID2020 = 0003420493
 statDataID2019 = 0003413173
@@ -25,6 +27,8 @@ endef
 all:
 	make get_all 2>&1 | tee get.log 
 get_all:
+	make get2023 
+	make get2022 
 	make get2021 
 	make get2020
 	make get2019
@@ -42,6 +46,18 @@ tidy_all: tidy2012 tidy2013 tidy2014 tidy2015 tidy2016 tidy2017 tidy2018 tidy201
 setup:
 	mkdir -p data
 	mkdir -p tmp-dl/
+
+get2023:
+	python scripts/get_metainfo.py $(statDataID2023) > tmp-dl/2023.meta
+	python scripts/get_data.py $(statDataID2023) > tmp-dl/2023.csv
+tidy2023:
+	$(call tidy_data,2023)
+
+get2022:
+	python scripts/get_metainfo.py $(statDataID2022) > tmp-dl/2022.meta
+	python scripts/get_data.py $(statDataID2022) > tmp-dl/2022.csv
+tidy2022:
+	$(call tidy_data,2022)
 
 get2021:
 	python scripts/get_metainfo.py $(statDataID2021) > tmp-dl/2021.meta
